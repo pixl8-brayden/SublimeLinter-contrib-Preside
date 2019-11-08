@@ -2,9 +2,9 @@ from SublimeLinter.lint import Linter  # or NodeLinter, PythonLinter, ComposerLi
 
 
 class __class__(Linter):
-    cmd = '__cmd__'
-    regex = r''
-    multiline = False
-    defaults = {
-        'selector': 'source.python'
-    }
+	cmd = '__cmd__'
+	regex = r''
+	multiline = False
+	defaults = {
+		'selector': 'source.python'
+	}
