@@ -6,5 +6,5 @@ class __class__(Linter):
 	regex = r''
 	multiline = False
 	defaults = {
-		'selector': 'source.python'
+		'selector': 'embedding.cfml'
 	}

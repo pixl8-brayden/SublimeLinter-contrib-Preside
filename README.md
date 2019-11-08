@@ -5,9 +5,9 @@ This is a template. For "how to make a linter", please check [the HOWTO](HOWTO.m
 SublimeLinter-contrib-Preside
 ================================
 
-[![Build Status](https://travis-ci.org/SublimeLinter/SublimeLinter-contrib-Preside.svg?branch=master)](https://travis-ci.org/SublimeLinter/SublimeLinter-contrib-Preside)
+[![Build Status](https://travis-ci.org/SublimeLinter/SublimeLinter-contrib-Preside.svg?branch=stable)](https://travis-ci.org/SublimeLinter/SublimeLinter-contrib-Preside)
 
-This linter plugin for [SublimeLinter](https://github.com/SublimeLinter/SublimeLinter) provides an interface to [Preside](__linter_homepage__). It will be used with files that have the “__syntax__” syntax.
+This linter plugin for [SublimeLinter](https://github.com/SublimeLinter/SublimeLinter) provides an interface to [Preside](https://docs.preside.org). It will be used with files that have the “CFML” syntax.
 
 ## Installation
 SublimeLinter must be installed in order to use this plugin.

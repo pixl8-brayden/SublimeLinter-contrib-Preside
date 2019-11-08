@@ -3,4 +3,4 @@ SublimeLinter-contrib-Preside
 This linter plugin for SublimeLinter provides an interface to Preside.
 
 For more information, please see:
-https://github.com/__user__/SublimeLinter-contrib-Preside
+https://github.com/pixl8-brayden/SublimeLinter-contrib-Preside/
