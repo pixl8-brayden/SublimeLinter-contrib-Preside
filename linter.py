@@ -1,10 +1,11 @@
-from SublimeLinter.lint import Linter  # or NodeLinter, PythonLinter, ComposerLinter, RubyLinter
+from SublimeLinter.lint import Linter, WARNING
 
 
 class Preside(Linter):
-    cmd = '__cmd__'
+    cmd = 'presidelint'
     regex = r''
     multiline = False
+    default_type = WARNING
     defaults = {
         'selector': 'embedding.cfml'
     }
