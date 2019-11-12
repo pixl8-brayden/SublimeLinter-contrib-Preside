@@ -1,6 +1,6 @@
 import re
 
-from SublimeLinter.lint import Linter, ERROR, WARNING
+from SublimeLinter.lint import Linter, WARNING
 
 
 class Preside(Linter):
