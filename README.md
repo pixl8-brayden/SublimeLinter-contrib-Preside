@@ -10,6 +10,8 @@ SublimeLinter must be installed in order to use this plugin.
 
 Please use [Package Control](https://packagecontrol.io) to install the linter plugin.
 
+Clone this repo into your `Packages` folder.
+
 ## Settings
 - SublimeLinter settings: http://sublimelinter.readthedocs.org/en/latest/settings.html
 - Linter settings: http://sublimelinter.readthedocs.org/en/latest/linter_settings.html
