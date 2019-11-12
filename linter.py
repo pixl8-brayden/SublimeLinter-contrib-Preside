@@ -25,12 +25,12 @@ class Preside(Linter):
         regions = self.view.find_all('for.*(.*).*{')
 
         for region in regions:
-            line = self.view.substr( region )
-            if line.find( 'var' ) > 0:
+            line = self.view.substr(region)
+            if line.find('var') > 0:
                 continue
 
-            row = self.view.rowcol( region.a )[0]
-            col = self.view.rowcol( region.a )[1]
+            row = self.view.rowcol(region.a)[0]
+            col = self.view.rowcol(region.a)[1]
 
             error_type = WARNING
             word = 'Missing var'
