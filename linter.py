@@ -1,6 +1,6 @@
 import re
 
-from SublimeLinter.lint import Linter, WARNING
+from SublimeLinter.lint import Linter, ERROR
 
 
 class Preside(Linter):
@@ -10,32 +10,42 @@ class Preside(Linter):
                        r' (warning \((?P<warning>.+?)\)|error \((?P<error>.+?)\)):'
                        r' (?P<message>.*)')
     re_flags = re.IGNORECASE
-
-    # We use this to do the matching
     mark_regex_template = r'(?:(?P<warning>{warnings})|(?P<error>{errors})):?\s*(?P<message>.*)'
-
-    # Words to look for
     defaults = {
         'selector': 'embedding.cfml, source.cfml, source.cfscript, text.html.cfm',
-        # 'selector': '',
     }
 
     def run(self, cmd, code):
+
+        def missingVarInForLoopError(line):
+            if len(re.findall(r'for.*\(.* in .*\)*{', line)) > 0 or len(re.findall(r'for.*\(.*;.*;.*\)*{', line)) > 0:
+                if line.find('var') < 0:
+                    return True, 'Missing var', 'Potential race condition', line.find('for')
+            return False, '', '', 0
+
+        # Process
         output = []
-        regions = self.view.find_all('for.*(.*).*{')
+        regions = self.view.find_all('.*')
+
+        # For debugging
+        print('Process running...')
 
         for region in regions:
             line = self.view.substr(region)
-            if line.find('var') > 0:
-                continue
 
-            row = self.view.rowcol(region.a)[0]
-            col = self.view.rowcol(region.a)[1]
+            # check missing var in for loop
+            missingVarStatus, missingVarWord, missingVarMessage, missingVarPos = missingVarInForLoopError(line=line)
+            if missingVarStatus:
+                row = self.view.rowcol(region.a)[0]
+                col = missingVarPos
 
-            error_type = WARNING
-            word = 'Missing var'
-            message = 'Potential race condition'
+                error_type = ERROR
+                word = missingVarWord
+                message = missingVarMessage
 
-            output.append('{row}:{col}: {error_type} ({word}): {message}'.format(**locals()))
+                output.append('{row}:{col}: {error_type} ({word}): {message}'.format(**locals()))
+
+        # For debugging
+        print('Process finished!')
 
         return '\n'.join(output)
