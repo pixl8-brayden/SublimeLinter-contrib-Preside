@@ -1,6 +1,6 @@
 import re
 
-from SublimeLinter.lint import Linter, ERROR
+from SublimeLinter.lint import Linter, ERROR, WARNING
 
 
 class Preside(Linter):
@@ -16,11 +16,46 @@ class Preside(Linter):
     }
 
     def run(self, cmd, code):
+        # Temp variable
+        tempList = []
+        start = False
 
+        # Functions
         def missingVarInForLoopError(line):
             if len(re.findall(r'for.*\(.* in .*\)*{', line)) > 0 or len(re.findall(r'for.*\(.*;.*;.*\)*{', line)) > 0:
                 if line.find('var') < 0:
-                    return True, 'Missing var', 'Potential race condition', line.find('for')
+                    return True, 'Missing var in loop', \
+                        'Potential race condition', line.find('for')
+            return False, '', '', 0
+
+        def variableDeclareError(line):
+            global start
+            global tempList
+
+            backetStart = re.findall(r'\).*\{', line)
+            if len(backetStart):
+                start = True
+                return False, '', '', 0
+
+            backetStop = re.findall(r'.*\}', line)
+            if len(backetStop):
+                start = False
+                tempList = []
+                return False, '', '', 0
+
+            if start:
+                if len(re.findall(r'\/\/', line)):
+                    return False, '', '', 0
+
+                potentialVariable = re.findall(r'\s(\w.*)\s\= .*', line)
+                if len(potentialVariable):
+                    if re.findall(r'var', potentialVariable[0]):
+                        tempList.append(re.findall(r'var\s(\w.*)\s\= .*', line)[0])
+
+                    if potentialVariable[0].replace('var ', '') not in tempList:
+                        return True, 'Variable missing declaration', \
+                            'Please confirm your variable is declared probably.', line.find(potentialVariable[0])
+
             return False, '', '', 0
 
         # Process
@@ -34,7 +69,9 @@ class Preside(Linter):
             line = self.view.substr(region)
 
             # check missing var in for loop
-            missingVarStatus, missingVarWord, missingVarMessage, missingVarPos = missingVarInForLoopError(line=line)
+            missingVarStatus, missingVarWord, \
+                missingVarMessage, missingVarPos = missingVarInForLoopError(line=line)
+
             if missingVarStatus:
                 row = self.view.rowcol(region.a)[0]
                 col = missingVarPos
@@ -42,6 +79,20 @@ class Preside(Linter):
                 error_type = ERROR
                 word = missingVarWord
                 message = missingVarMessage
+
+                output.append('{row}:{col}: {error_type} ({word}): {message}'.format(**locals()))
+
+            # check missing var in for loop
+            variableDeclareStatus, variableDeclareWord, \
+                variableDeclareMessage, variableDeclarePos = variableDeclareError(line=line)
+
+            if variableDeclareStatus:
+                row = self.view.rowcol(region.a)[0]
+                col = variableDeclarePos
+
+                error_type = WARNING
+                word = variableDeclareWord
+                message = variableDeclareMessage
 
                 output.append('{row}:{col}: {error_type} ({word}): {message}'.format(**locals()))
 
