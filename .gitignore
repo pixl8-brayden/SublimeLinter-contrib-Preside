@@ -40,3 +40,7 @@ Thumbs.db
 # Node installed packages #
 ###########################
 node_modules/*
+
+# Test file #
+###########################
+test/*

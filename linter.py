@@ -32,7 +32,7 @@ class Preside(Linter):
             global start
             global tempList
 
-            backetStart = re.findall(r'\).*\{', line)
+            backetStart = re.findall(r'function.*\).*\{', line)
             if len(backetStart):
                 start = True
                 return False, '', '', 0
@@ -48,7 +48,7 @@ class Preside(Linter):
                     return False, '', '', 0
 
                 potentialVariable = re.findall(r'\s(\w.*)\s\= .*', line)
-                if len(potentialVariable):
+                if len(potentialVariable) and not re.findall(r'\.', potentialVariable[0]):
                     if re.findall(r'var', potentialVariable[0]):
                         tempList.append(re.findall(r'var\s(\w.*)\s\= .*', line)[0])
 
